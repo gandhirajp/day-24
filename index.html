@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serve form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+
+    <style>
+        input {
+            width: 200px;
+        }
+
+        .col-md-2 {
+            border-right: 2px solid greenyellow;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-2">
+                <form id="forms">
+                    <label for="Name">Name</label>
+                    <br>
+                    <input type="text" name="Name" id="Name" required>
+                    <br>
+                    <label for="Email">Email</label>
+                    <br>
+                    <input type="email" name="Email" id="Email" required>
+                    <br>
+                    <label for="PhoneNumber">PhoneNumber</label>
+                    <br>
+                    <input type="text" name="PhoneNumber" id="PhoneNumber" required>
+                    <br>
+                    <label for="Eduction">Eduction</label>
+                    <br>
+                    <input type="text" name="Eduction" id="Eduction" required>
+                    <br>
+                    <label for="City">City</label>
+                    <br>
+                    <input type="text" name="City" id="City" required>
+                    <br>
+                    <label for="Pincode">Pincode</label>
+                    <br>
+                    <input type="text" name="Pincode" id="Pincode" required>
+                    <br>
+                    <label for="State">State</label>
+                    <br>
+                    <input type="text" name="State" id="State" required>
+                    <br>
+                    <label for="Country">Country</label>
+                    <br>
+                    <input type="text" name="Country" id="Country" required>
+                    <br>
+                    <label for="Password">Password</label>
+                    <br>
+                    <input type="password" name="Password" id="Password" required>
+                    <br>
+                    <button id="submit" class="btn btn-primary">Submit</button>
+
+                </form>
+            </div>
+
+
+            <div class="col-md-10">
+                <table class="table table-bordered ">
+                    <thead class="table-responsive-xl">
+                        <tr>
+
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>PhoneNumber</th>
+                            <th>Education</th>
+                            <th>City</th>
+                            <th>Pincode</th>
+                            <th>State</th>
+                            <th>Country</th>
+                            <th>Password</th>
+                            <th>Edit</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+
+                        </tr>
+
+                    </thead>
+                    <tbody id="bod">
+                        <tr>
+
+                            <td id="Name1"></td>
+                            <td id="Email2"></td>
+                            <td id="PhoneNumber3"></td>
+                            <td id="Education4"></td>
+                            <td id="City5"></td>
+                            <td id="Pincode6"></td>
+                            <td id="State7"></td>
+                            <td id="Country8"></td>
+                            <td id="Password9"></td>
+                            <td><button id="edit">Edit</button></td>
+                            <td><button id="update">Update</button></td>
+                            <td><button id="delete">Delete</button></td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.getElementById("forms").addEventListener("submit", async function (element) {
+
+            element.preventDefault();
+            var sub = {
+                Name: document.getElementById("Name").value,
+                Email: document.getElementById("Email").value,
+                PhoneNumber: document.getElementById("PhoneNumber").value,
+                Eduction: document.getElementById("Eduction").value,
+                City: document.getElementById("City").value,
+                Pincode: document.getElementById("Pincode").value,
+                State: document.getElementById("State").value,
+                Country: document.getElementById("Country").value,
+                Password: document.getElementById("Password").value
+
+            }
+
+
+            try {
+                var sendData = await fetch("https://619c75d268ebaa001753c89f.mockapi.io/serveform", {
+                    method: "POST",
+                    body: JSON.stringify(sub),
+                    headers: {
+                        "Content-type": "application/json"
+                    }
+                })
+                location.reload();
+
+            }
+            catch (error) {
+                console.log(error);
+            }
+        })
+
+        async function getdata() {
+            try {
+                var data = await fetch("https://619c75d268ebaa001753c89f.mockapi.io/serveform")
+                var dataobj = await (data.json())
+                console.log(dataobj);
+
+                for(i = 0; i < dataobj.length; i++) {
+
+                    console.log(dataobj.City)
+
+                    var mydata = dataobj[i];
+                    document.getElementById("Name1").innerHTML = mydata.name;
+                    document.getElementById("Email2").innerHTML = mydata.email;
+                    document.getElementById("PhoneNumber3").innerHTML = mydata.phonenum;
+                    document.getElementById("Education4").innerHTML = mydata.education;
+                    document.getElementById("City5").innerHTML = mydata.city;
+                    document.getElementById("Pincode6").innerHTML = mydata.pincode;
+                    document.getElementById("State7").innerHTML = mydata.state;
+                    document.getElementById("Country8").innerHTML = mydata.country;
+                    document.getElementById("Password9").innerHTML = mydata.password;
+
+
+                    var edit1 = document.getElementById("edit");
+                    edit1.setAttribute("id", mydata[0])
+                    edit1.addEventListener("click", async function () {
+
+                        try {
+                            var edit2 = await fetch(`https://619856c0164fa60017c23011.mockapi.io/users/${this.id}`);
+                            var edit3 = await edit2.json();
+                            console.log(edit3)
+                            console.log(edit3.name)
+                            document.getElementById("Name1").value = edit3.name;
+                            document.getElementById("Email2").value = edit3.email;
+                            document.getElementById("PhoneNumber3").value = edit3.phonenum;
+                            document.getElementById("Education4").value = edit3.education;
+                            document.getElementById("City5").value = edit3.city;
+                            document.getElementById("Pincode6").value = edit3.pincode;
+                            document.getElementById("State7").value = edit3.state;
+                            document.getElementById("Country8").value = edit3.country;
+                            document.getElementById("Password9").value = edit3.password;
+                        }
+                        catch (err) {
+                            console.log(err)
+                        }
+
+
+                    })
+
+
+                }
+
+
+
+            }
+            catch (err) {
+                console.log(error)
+            }
+
+        };
+
+        getdata();
+
+
+    </script>
+
+</body>
+
+</html>
